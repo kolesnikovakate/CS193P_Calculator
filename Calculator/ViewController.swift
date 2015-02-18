@@ -11,9 +11,9 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var historyDisplay: UILabel!
 
     var isUserInTheMiddleOfTypingANumber = false
-    var isUserAlreadyEnteredADecimalPoint = false
     var brain = CalculatorBrain()
 
     @IBAction func appendDigit(sender: UIButton) {
@@ -31,6 +31,7 @@ class ViewController: UIViewController {
             enter()
         }
         if let operation = sender.currentTitle {
+            historyDisplay.text = historyDisplay.text! + operation + " "
             if let result = brain.performOperation(operation) {
                 displayValue = result
             } else {
@@ -41,7 +42,7 @@ class ViewController: UIViewController {
 
     @IBAction func enter() {
         isUserInTheMiddleOfTypingANumber = false
-        isUserAlreadyEnteredADecimalPoint = false
+        historyDisplay.text = historyDisplay.text! + "\(displayValue) "
         if let result = brain.pushOperand(displayValue) {
             displayValue = result
         } else {
@@ -49,14 +50,19 @@ class ViewController: UIViewController {
         }
     }
 
+    @IBAction func clearAll() {
+        displayValue = 0
+        historyDisplay.text = ""
+        isUserInTheMiddleOfTypingANumber = false
+        brain.clear()
+    }
+
     @IBAction func enterADecimalPoint() {
-        if (isUserInTheMiddleOfTypingANumber && !isUserAlreadyEnteredADecimalPoint) {
+        if (isUserInTheMiddleOfTypingANumber && display.text!.rangeOfString(".") == nil) {
             display.text = display.text! + "."
-            isUserAlreadyEnteredADecimalPoint = true
-        } else if (!isUserInTheMiddleOfTypingANumber && !isUserAlreadyEnteredADecimalPoint) {
+        } else if (!isUserInTheMiddleOfTypingANumber ) {
             display.text = "0."
             isUserInTheMiddleOfTypingANumber = true
-            isUserAlreadyEnteredADecimalPoint = true
         }
     }
 

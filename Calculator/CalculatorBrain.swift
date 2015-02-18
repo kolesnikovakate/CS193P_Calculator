@@ -82,6 +82,10 @@ class CalculatorBrain
         return result
     }
 
+    func clear() {
+        opStack.removeAll(keepCapacity: false)
+    }
+
     func pushOperand(operand: Double) -> Double? {
         opStack.append(Op.Operand(operand))
         return evaluate()
